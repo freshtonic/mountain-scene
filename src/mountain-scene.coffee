@@ -1,5 +1,5 @@
 
-class MountainScene
+class @MountainScene
   constructor: ->
     @scene    = new THREE.Scene()
     @camera   = new THREE.PerspectiveCamera 90, window.innerWidth / window.innerHeight, 0.1, 1000
@@ -29,6 +29,4 @@ class MountainScene
   render: ->
     requestAnimationFrame => @render()
     @renderer.render @scene, @camera
-
-new MountainScene()
 

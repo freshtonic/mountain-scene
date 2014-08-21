@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# This script extracts the 'depends: ...' comments from the coffee source files
+# and converts the dependency information into a format compatible with tsort,
+# and tsorts it. The end result is a list of file names in the order they should
+# be concatenated so as to satisfy dependencies.
+
+for f in $(ls src); do
+  for dep in $(echo $(basename $f .coffee); cat "src/$f" | grep -o -E "^# depends: .+$" | grep -E -o "[^ ]+$"); do
+    echo -n "src/$dep.coffee"
+    echo -n " "
+    echo -n "src/$f"
+    echo
+  done
+done | tsort
