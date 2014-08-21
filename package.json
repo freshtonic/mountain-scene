@@ -1,0 +1,17 @@
+{
+  "name": "parallaz",
+  "version": "",
+  "description": "",
+  "main": "",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "spec": "make spec"
+  },
+  "devDependencies": {
+    "jasmine-node": "1.14.3",
+    "coffee-script": ">=1.7.1",
+    "expect.js": "~0.3.1"
+  }
+}
