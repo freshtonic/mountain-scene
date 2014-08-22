@@ -14,8 +14,8 @@ build/%.js: src/%.coffee
 build/concat-order.txt: $(SRC_COFFEE)
 	@./dep-order > $@
 
-build/mountain-scene.coffee: $(SRC_COFFEE)
-	@cat $^ > $@
+build/mountain-scene.coffee: build/concat-order.txt
+	@cat $(shell cat $^) > $@
 
 $(DIST): build/mountain-scene.coffee
 	@echo COMPILE: $<
