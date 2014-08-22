@@ -29,7 +29,7 @@
   });
 
   angular.module('mountain-scene').factory('Mountain', function(random) {
-    var Mountain, buildTree, flattenTree, lowest;
+    var Mountain, buildTree, flattenTree, lowest, normalize;
     buildTree = function(roughness) {
       var build;
       return build = function(segment, depth, displacement) {
@@ -75,19 +75,27 @@
         return l;
       }, 0);
     };
+    normalize = function(heights) {
+      var l;
+      l = lowest(heights);
+      return heights.map(function(h) {
+        return h - l + 1;
+      });
+    };
     return Mountain = (function() {
-      function Mountain(roughness, initialDisplacement) {
-        var geometry, h, heights, l, material, segment, shape, tree, x, _i, _len, _ref;
+      function Mountain(params) {
+        var geometry, h, heights, initialDisplacement, leftHeight, material, rightHeight, roughness, segment, shape, tree, x, _i, _len, _ref;
+        roughness = params.roughness, initialDisplacement = params.initialDisplacement, leftHeight = params.leftHeight, rightHeight = params.rightHeight;
         segment = {
-          l: 1,
-          r: 1
+          l: leftHeight || 1,
+          r: rightHeight || 1
         };
         tree = buildTree(roughness)(segment, 11, initialDisplacement);
         heights = flattenTree(tree);
         shape = new THREE.Shape();
-        l = lowest(heights) - 10;
+        heights = normalize(heights);
         x = -(heights.length / 2);
-        shape.moveTo(x, l);
+        shape.moveTo(x, 0);
         shape.lineTo(x, heights[0]);
         _ref = heights.slice(1);
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -95,11 +103,11 @@
           x += 1;
           shape.lineTo(x, h);
         }
-        shape.lineTo(x, l);
-        shape.lineTo(-(heights.length / 2), l);
+        shape.lineTo(x, 0);
+        shape.lineTo(-(heights.length / 2), 0);
         geometry = new THREE.ShapeGeometry(shape);
         material = new THREE.MeshBasicMaterial({
-          color: 0x00ffff
+          color: 0xBBBBBB
         });
         this.object = new THREE.Mesh(geometry, material);
       }
@@ -117,10 +125,17 @@
         this._camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
-        this._camera.position.z = 10;
-        this._roughness = 0.8;
-        this._initialDisplacement = 50;
-        this._mountain = new Mountain(this._roughness, this._initialDisplacement);
+        this._camera.position.z = 250;
+        this._roughness = 0.65;
+        this._initialDisplacement = 65;
+        this._leftHeight = 2;
+        this._rightHeight = 2;
+        this._mountain = new Mountain({
+          roughness: this.roughness,
+          initialDisplacement: this.initialDisplacement,
+          leftHeight: this.leftHeight,
+          rightHeight: this.rightHeight
+        });
         this._scene.add(this._mountain.object);
       }
 
@@ -140,7 +155,12 @@
       MountainScene.prototype._update = function(seed) {
         this._scene.remove(this._mountain.object);
         random.reset(seed);
-        this._mountain = new Mountain(this._roughness, this._initialDisplacement);
+        this._mountain = new Mountain({
+          roughness: this.roughness,
+          initialDisplacement: this.initialDisplacement,
+          leftHeight: this.leftHeight,
+          rightHeight: this.rightHeight
+        });
         return this._scene.add(this._mountain.object);
       };
 
@@ -150,7 +170,7 @@
             return this._roughness;
           },
           set: function(value) {
-            this._roughness = value;
+            this._roughness = parseFloat(value);
             return this._update();
           }
         },
@@ -159,7 +179,25 @@
             return this._initialDisplacement;
           },
           set: function(value) {
-            this._initialDisplacement = value;
+            this._initialDisplacement = parseFloat(value);
+            return this._update();
+          }
+        },
+        leftHeight: {
+          get: function() {
+            return this._leftHeight;
+          },
+          set: function(value) {
+            this._leftHeight = parseFloat(value);
+            return this._update();
+          }
+        },
+        rightHeight: {
+          get: function() {
+            return this._rightHeight;
+          },
+          set: function(value) {
+            this._rightHeight = parseFloat(value);
             return this._update();
           }
         },
@@ -168,7 +206,7 @@
             return this._camera.position.z;
           },
           set: function(value) {
-            this._camera.position.z = value;
+            this._camera.position.z = parseFloat(value);
             return this._update();
           }
         }
