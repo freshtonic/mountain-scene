@@ -10,14 +10,29 @@
     });
   });
 
-  angular.module('mountain-scene').factory('Mountain', function() {
+  angular.module('mountain-scene').service('random', function() {
+    var seed;
+    seed = 1;
+    return {
+      reset: function() {
+        return seed = 1;
+      },
+      next: function() {
+        var x;
+        x = Math.sin(seed++) * 10000;
+        return x - Math.floor(x);
+      }
+    };
+  });
+
+  angular.module('mountain-scene').factory('Mountain', function(random) {
     var Mountain, buildTree, flattenTree, scaleHeight;
     buildTree = function(roughness) {
       var build;
       return build = function(segment, depth, displacement) {
         var avgY, change, left, right, y;
         avgY = (segment.l + segment.r) / 2;
-        change = (Math.random() * 2 - 1) * displacement;
+        change = (random.next() * 2 - 1) * displacement;
         y = avgY + change;
         displacement = displacement * roughness;
         left = {
@@ -86,7 +101,7 @@
     })();
   });
 
-  angular.module('mountain-scene').factory('MountainScene', function(Mountain) {
+  angular.module('mountain-scene').factory('MountainScene', function(Mountain, random) {
     var MountainScene;
     return MountainScene = (function() {
       function MountainScene() {
@@ -112,6 +127,7 @@
 
       MountainScene.prototype._update = function() {
         this._scene.remove(this._mountain.object);
+        random.reset();
         this._mountain = new Mountain(this._roughness, this._initialDisplacement);
         return this._scene.add(this._mountain.object);
       };

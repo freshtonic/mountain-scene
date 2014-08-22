@@ -1,12 +1,12 @@
 
 # depends: app.module
 
-angular.module('mountain-scene').factory 'Mountain', ->
+angular.module('mountain-scene').factory 'Mountain', (random) ->
 
   buildTree = (roughness) ->
     build = (segment, depth, displacement) ->
       avgY = (segment.l + segment.r) / 2
-      change = (Math.random() * 2 - 1) * displacement
+      change = (random.next() * 2 - 1) * displacement
       y = avgY + change
 
       displacement = displacement * roughness

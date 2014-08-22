@@ -1,7 +1,7 @@
 
 # depends: app.module
 
-angular.module('mountain-scene').factory 'MountainScene', (Mountain) ->
+angular.module('mountain-scene').factory 'MountainScene', (Mountain, random) ->
 
   class MountainScene
     constructor: ->
@@ -26,6 +26,7 @@ angular.module('mountain-scene').factory 'MountainScene', (Mountain) ->
 
     _update: ->
       @_scene.remove @_mountain.object
+      random.reset()
       @_mountain = new Mountain @_roughness, @_initialDisplacement
       @_scene.add @_mountain.object
 
