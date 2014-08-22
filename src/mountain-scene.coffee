@@ -63,9 +63,18 @@ angular.module('mountain-scene').factory 'MountainScene', (Mountain, random) ->
           @_rightHeight = parseFloat value
           @_update()
 
+      cameraX:
+        get: -> @_camera.position.x
+        set: (value) ->
+          @_camera.position.x = parseFloat value
+
+      cameraY:
+        get: -> @_camera.position.y
+        set: (value) ->
+          @_camera.position.y = parseFloat value
+
       cameraZ:
         get: -> @_camera.position.z
         set: (value) ->
           @_camera.position.z = parseFloat value
-          @_update()
 

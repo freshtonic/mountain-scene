@@ -26,8 +26,16 @@
         Right height {{ scene.rightHeight }}
       </li>
       <li>
+        <input ng-model='scene.cameraX' type='range' min='0' max='1000' step='1'>
+        Camera X coordinate {{ scene.cameraX }}
+      </li>
+      <li>
+        <input ng-model='scene.cameraY' type='range' min='0' max='1000' step='1'>
+        Camera Y coordinate {{ scene.cameraY }}
+      </li>
+      <li>
         <input ng-model='scene.cameraZ' type='range' min='0' max='1000' step='1'>
-        Camera z coordinate {{ scene.cameraZ }}
+        Camera Z coordinate {{ scene.cameraZ }}
       </li>
       <li>
         <button ng-click='scene.regenerate()'>Regenerate</button>
