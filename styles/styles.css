@@ -5,15 +5,25 @@ html, body {
   margin: 0;
 }
 
-ul.controls li {
+ul.controls li, ul.tabs li {
   list-style-type: none;
 }
 
-ul.controls {
+ul.controls, ul.tabs {
   padding: 0;
   margin: 0;
+}
+
+ul.tabs a.active {
+  font-weight: bold;
+}
+
+ul.tabs li {
+  display: inline;
+  cursor: pointer;
 }
 
 .controls input[type='range'] {
   width: 400px;
 }
+

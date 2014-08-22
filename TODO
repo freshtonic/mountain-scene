@@ -1,9 +1,14 @@
 
 
+
 - multiple mountain ranges
   - generate the background mountain range first (high)
   - generate the each successive foreground mountain as a function of the first
-  - the colour of the mountain is a function of the distance from the camera
+    - sharing the random seed to reproduce the similar segment tree might be a good start
+    - maybe the foreground mountains have their generation parameters tweaked, instead of
+      modifying the parent's height map?
+  - texture
+  - lighting
 
 - ground & sky
   - moving clouds

@@ -7,6 +7,8 @@ angular.module('mountain-scene')
 
     $rootScope.scene = new MountainScene()
 
+    $rootScope.activeTab = 'Mountains'
+
     $ ->
       document.body.appendChild $rootScope.scene.renderer.domElement
       $rootScope.scene.render()

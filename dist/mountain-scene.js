@@ -4,10 +4,17 @@
 
   angular.module('mountain-scene').run(function($rootScope, MountainScene) {
     $rootScope.scene = new MountainScene();
+    $rootScope.activeTab = 'Mountains';
     return $(function() {
       document.body.appendChild($rootScope.scene.renderer.domElement);
       return $rootScope.scene.render();
     });
+  });
+
+  angular.module('mountain-scene').directive('tabs', function() {
+    return {
+      template: "<div>\n  \n</div>"
+    };
   });
 
   angular.module('mountain-scene').service('random', function() {
@@ -83,23 +90,26 @@
       });
     };
     return Mountain = (function() {
-      function Mountain(params) {
-        var geometry, h, heights, initialDisplacement, leftHeight, material, rightHeight, roughness, segment, shape, tree, x, _i, _len, _ref;
-        roughness = params.roughness, initialDisplacement = params.initialDisplacement, leftHeight = params.leftHeight, rightHeight = params.rightHeight;
+      function Mountain(_arg) {
+        var color, geometry, h, heights, initialDisplacement, leftHeight, material, rightHeight, roughness, segment, shape, tree, x, zPos, _i, _len, _ref, _ref1;
+        _ref = _arg != null ? _arg : params, roughness = _ref.roughness, initialDisplacement = _ref.initialDisplacement, leftHeight = _ref.leftHeight, rightHeight = _ref.rightHeight, zPos = _ref.zPos, color = _ref.color;
         segment = {
           l: leftHeight || 1,
           r: rightHeight || 1
         };
-        tree = buildTree(roughness)(segment, 11, initialDisplacement);
+        if (color == null) {
+          color = 0xBBBBBB;
+        }
+        tree = buildTree(roughness)(segment, 10, initialDisplacement);
         heights = flattenTree(tree);
         shape = new THREE.Shape();
         heights = normalize(heights);
         x = -(heights.length / 2);
         shape.moveTo(x, 0);
         shape.lineTo(x, heights[0]);
-        _ref = heights.slice(1);
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          h = _ref[_i];
+        _ref1 = heights.slice(1);
+        for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+          h = _ref1[_i];
           x += 1;
           shape.lineTo(x, h);
         }
@@ -107,9 +117,10 @@
         shape.lineTo(-(heights.length / 2), 0);
         geometry = new THREE.ShapeGeometry(shape);
         material = new THREE.MeshBasicMaterial({
-          color: 0xBBBBBB
+          color: color
         });
         this.object = new THREE.Mesh(geometry, material);
+        this.object.position.z = zPos || 0;
       }
 
       return Mountain;
@@ -121,6 +132,7 @@
     var MountainScene;
     return MountainScene = (function() {
       function MountainScene() {
+        var mountain, _i, _len, _ref;
         this._seed = 1;
         this._scene = new THREE.Scene();
         this._camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -131,13 +143,12 @@
         this._initialDisplacement = 65;
         this._leftHeight = 2;
         this._rightHeight = 2;
-        this._mountain = new Mountain({
-          roughness: this.roughness,
-          initialDisplacement: this.initialDisplacement,
-          leftHeight: this.leftHeight,
-          rightHeight: this.rightHeight
-        });
-        this._scene.add(this._mountain.object);
+        this._makeMountains();
+        _ref = this._mountains;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          mountain = _ref[_i];
+          this._scene.add(mountain.object);
+        }
       }
 
       MountainScene.prototype.regenerate = function() {
@@ -154,16 +165,43 @@
         })(this));
       };
 
+      MountainScene.prototype._makeMountains = function() {
+        var color, n, zPos, _i, _results;
+        this._mountains = [];
+        zPos = 0;
+        color = 0x444444;
+        _results = [];
+        for (n = _i = 0; _i < 4; n = ++_i) {
+          this._mountains.push(new Mountain({
+            roughness: this.roughness,
+            initialDisplacement: this.initialDisplacement,
+            leftHeight: this.leftHeight,
+            rightHeight: this.rightHeight,
+            zPos: zPos,
+            color: color
+          }));
+          zPos += 20;
+          _results.push(color *= 0.08);
+        }
+        return _results;
+      };
+
       MountainScene.prototype._update = function() {
-        this._scene.remove(this._mountain.object);
+        var mountain, _i, _j, _len, _len1, _ref, _ref1, _results;
+        _ref = this._mountains;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          mountain = _ref[_i];
+          this._scene.remove(mountain.object);
+        }
         random.reset(this._seed);
-        this._mountain = new Mountain({
-          roughness: this.roughness,
-          initialDisplacement: this.initialDisplacement,
-          leftHeight: this.leftHeight,
-          rightHeight: this.rightHeight
-        });
-        return this._scene.add(this._mountain.object);
+        this._makeMountains();
+        _ref1 = this._mountains;
+        _results = [];
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+          mountain = _ref1[_j];
+          _results.push(this._scene.add(mountain.object));
+        }
+        return _results;
       };
 
       Object.defineProperties(MountainScene.prototype, {
@@ -203,13 +241,28 @@
             return this._update();
           }
         },
+        cameraX: {
+          get: function() {
+            return this._camera.position.x;
+          },
+          set: function(value) {
+            return this._camera.position.x = parseFloat(value);
+          }
+        },
+        cameraY: {
+          get: function() {
+            return this._camera.position.y;
+          },
+          set: function(value) {
+            return this._camera.position.y = parseFloat(value);
+          }
+        },
         cameraZ: {
           get: function() {
             return this._camera.position.z;
           },
           set: function(value) {
-            this._camera.position.z = parseFloat(value);
-            return this._update();
+            return this._camera.position.z = parseFloat(value);
           }
         }
       });
