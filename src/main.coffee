@@ -1,6 +1,5 @@
 
 # depends: mountain-scene
-# depends: mountain
 
 mountainScene = new MountainScene()
 
