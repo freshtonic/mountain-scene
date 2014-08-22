@@ -1,4 +1,6 @@
 
+# depends: mountain
+
 class @MountainScene
   constructor: ->
     @scene    = new THREE.Scene()
@@ -9,22 +11,9 @@ class @MountainScene
 
     @camera.position.z = 10
 
-    shape = new THREE.Shape()
-    shape.moveTo 0, 0
-    shape.lineTo 0, 1
-    shape.lineTo 1, 1
-    shape.lineTo 0, 0
+    mountain = Mountain.initial()
 
-    geometry = new THREE.ShapeGeometry shape
-
-    material  = new THREE.MeshBasicMaterial color: 0x00ffff
-    mesh      = new THREE.Mesh( geometry, material )
-
-    @scene.add mesh
-
-    $ =>
-      document.body.appendChild @renderer.domElement
-      @render()
+    @scene.add mountain.object
 
   render: ->
     requestAnimationFrame => @render()
