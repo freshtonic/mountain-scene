@@ -1,12 +1,18 @@
 
-- add Angular
 
-- make it interactive
-  - ui widget for controlling camera z
-    - console.logs values for pasting back into program
+- multiple mountain ranges
+  - generate the background mountain range first (high)
+  - generate the each successive foreground mountain as a function of the first
+  - the colour of the mountain is a function of the distance from the camera
 
-- use repeatable random number generator
-  - sliders for roughness & initial displacement
-
-
+- ground & sky
+  - moving clouds
+- trees?
+- altitude render the mountains (no idea how at this stage)
+  - meadow / trees
+  - bare rock
+  - snow above certain altitude where slow < some angle
+- sun
+  - draggable
+  - lens flare (that changes in intensity the more the sun is obscured by a mountain, or cloud)
 
