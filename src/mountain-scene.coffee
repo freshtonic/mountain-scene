@@ -11,10 +11,10 @@ angular.module('mountain-scene').factory 'MountainScene', (Mountain, random) ->
 
       @renderer.setSize window.innerWidth, window.innerHeight
 
-      @_camera.position.z = 10
+      @_camera.position.z = 250
 
-      @_roughness = 0.8
-      @_initialDisplacement = 50
+      @_roughness = 0.65
+      @_initialDisplacement = 65
 
       @_mountain = new Mountain @_roughness, @_initialDisplacement
 

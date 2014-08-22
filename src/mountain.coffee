@@ -64,7 +64,7 @@ angular.module('mountain-scene').factory 'Mountain', (random) ->
       shape.lineTo -(heights.length / 2), 0
 
       geometry = new THREE.ShapeGeometry shape
-      material = new THREE.MeshBasicMaterial color: 0x00ffff
+      material = new THREE.MeshBasicMaterial color: 0xBBBBBB
 
       @object = new THREE.Mesh(geometry, material)
 
