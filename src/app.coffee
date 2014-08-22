@@ -1,10 +1,9 @@
 
 # depends: app.module
-# depends: mountain-scene
 
 angular.module('mountain-scene')
 
-  .run ($rootScope) ->
+  .run ($rootScope, MountainScene) ->
 
     $rootScope.scene = new MountainScene()
 

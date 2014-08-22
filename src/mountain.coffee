@@ -1,59 +1,63 @@
 
-buildTree = (roughness) ->
-  build = (segment, depth, displacement) ->
-    avgY = (segment.l + segment.r) / 2
-    change = (Math.random() * 2 - 1) * displacement
-    y = avgY + change
+# depends: app.module
 
-    displacement = displacement * roughness
+angular.module('mountain-scene').factory 'Mountain', ->
 
-    left  = { l: segment.l, r: y         }
-    right = { l: y,         r: segment.r }
+  buildTree = (roughness) ->
+    build = (segment, depth, displacement) ->
+      avgY = (segment.l + segment.r) / 2
+      change = (Math.random() * 2 - 1) * displacement
+      y = avgY + change
 
-    segment.children = [left, right]
+      displacement = displacement * roughness
 
-    if depth > 1
-      build left,  depth - 1, displacement
-      build right, depth - 1, displacement
+      left  = { l: segment.l, r: y         }
+      right = { l: y,         r: segment.r }
 
-    segment
+      segment.children = [left, right]
 
-flattenTree = (segment, heights=[]) ->
+      if depth > 1
+        build left,  depth - 1, displacement
+        build right, depth - 1, displacement
 
-  if segment.children?
-    flattenTree segment.children[0], heights
-    flattenTree segment.children[1], heights
+      segment
 
-  if not segment.children?
-    heights.push segment.l
+  flattenTree = (segment, heights=[]) ->
 
-  heights
+    if segment.children?
+      flattenTree segment.children[0], heights
+      flattenTree segment.children[1], heights
 
-scaleHeight = (h) ->
-  h / 100
+    if not segment.children?
+      heights.push segment.l
 
-class @Mountain
+    heights
 
-  constructor: (roughness, initialDisplacement) ->
-    segment = { l: 50, r: 50}
-    tree    = buildTree(roughness) segment, 11, initialDisplacement
-    heights = flattenTree tree
-    shape = new THREE.Shape()
+  scaleHeight = (h) ->
+    h / 100
 
-    x = 0
-    shape.moveTo x, scaleHeight heights[0]
-    for h in heights[1..]
-      x += 0.5
-      shape.lineTo x, scaleHeight h
+  class Mountain
 
-    shape.lineTo x, scaleHeight -20
-    shape.lineTo 0, scaleHeight -20
-    shape.lineTo 0, scaleHeight heights[0]
+    constructor: (roughness, initialDisplacement) ->
+      segment = { l: 50, r: 50}
+      tree    = buildTree(roughness) segment, 11, initialDisplacement
+      heights = flattenTree tree
+      shape = new THREE.Shape()
 
-    geometry = new THREE.ShapeGeometry shape
-    material = new THREE.MeshBasicMaterial color: 0x00ffff
+      x = 0
+      shape.moveTo x, scaleHeight heights[0]
+      for h in heights[1..]
+        x += 0.5
+        shape.lineTo x, scaleHeight h
 
-    @object = new THREE.Mesh(geometry, material)
-    @object.position.x = -30
+      shape.lineTo x, scaleHeight -20
+      shape.lineTo 0, scaleHeight -20
+      shape.lineTo 0, scaleHeight heights[0]
+
+      geometry = new THREE.ShapeGeometry shape
+      material = new THREE.MeshBasicMaterial color: 0x00ffff
+
+      @object = new THREE.Mesh(geometry, material)
+      @object.position.x = -30
 
 
