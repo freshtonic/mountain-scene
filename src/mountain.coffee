@@ -1,24 +1,22 @@
 
-initialDisplacement = 50
-roughness = 0.8
+buildTree = (roughness) ->
+  build = (segment, depth, displacement) ->
+    avgY = (segment.l + segment.r) / 2
+    change = (Math.random() * 2 - 1) * displacement
+    y = avgY + change
 
-buildTree = (segment, depth, displacement=initialDisplacement) ->
-  avgY = (segment.l + segment.r) / 2
-  change = (Math.random() * 2 - 1) * displacement
-  y = avgY + change
+    displacement = displacement * roughness
 
-  displacement = displacement * roughness
+    left  = { l: segment.l, r: y         }
+    right = { l: y,         r: segment.r }
 
-  left  = { l: segment.l, r: y         }
-  right = { l: y,         r: segment.r }
+    segment.children = [left, right]
 
-  segment.children = [left, right]
+    if depth > 1
+      build left,  depth - 1, displacement
+      build right, depth - 1, displacement
 
-  if depth > 1
-    buildTree left,  depth - 1, displacement
-    buildTree right, depth - 1, displacement
-
-  segment
+    segment
 
 flattenTree = (segment, heights=[]) ->
 
@@ -36,13 +34,10 @@ scaleHeight = (h) ->
 
 class @Mountain
 
-  @initial: ->
+  constructor: (roughness, initialDisplacement) ->
     segment = { l: 50, r: 50}
-    tree    = buildTree segment, 11
+    tree    = buildTree(roughness) segment, 11, initialDisplacement
     heights = flattenTree tree
-    new Mountain heights
-
-  constructor: (heights) ->
     shape = new THREE.Shape()
 
     x = 0
@@ -57,8 +52,8 @@ class @Mountain
 
     geometry = new THREE.ShapeGeometry shape
     material = new THREE.MeshBasicMaterial color: 0x00ffff
-    @object  = new THREE.Mesh( geometry, material )
-    @object.position.x = -30
 
+    @object = new THREE.Mesh(geometry, material)
+    @object.position.x = -30
 
 

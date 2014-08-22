@@ -4,3 +4,12 @@ html, body {
   width: 100%;
   margin: 0;
 }
+
+ul.controls li {
+  list-style-type: none;
+}
+
+ul.controls {
+  padding: 0;
+  margin: 0;
+}

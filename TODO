@@ -1,4 +1,6 @@
 
+- add Angular
+
 - make it interactive
   - ui widget for controlling camera z
     - console.logs values for pasting back into program
