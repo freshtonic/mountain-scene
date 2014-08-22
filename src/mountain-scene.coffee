@@ -15,8 +15,10 @@ angular.module('mountain-scene').factory 'MountainScene', (Mountain, random) ->
 
       @_roughness = 0.65
       @_initialDisplacement = 65
+      @_leftHeight = 2
+      @_rightHeight = 2
 
-      @_mountain = new Mountain @_roughness, @_initialDisplacement
+      @_mountain = new Mountain {@roughness, @initialDisplacement, @leftHeight, @rightHeight}
 
       @_scene.add @_mountain.object
 
@@ -30,7 +32,7 @@ angular.module('mountain-scene').factory 'MountainScene', (Mountain, random) ->
     _update: (seed) ->
       @_scene.remove @_mountain.object
       random.reset seed
-      @_mountain = new Mountain @_roughness, @_initialDisplacement
+      @_mountain = new Mountain {@roughness, @initialDisplacement, @leftHeight, @rightHeight}
       @_scene.add @_mountain.object
 
     Object.defineProperties @::,
@@ -38,18 +40,30 @@ angular.module('mountain-scene').factory 'MountainScene', (Mountain, random) ->
       roughness:
         get: -> @_roughness
         set: (value) ->
-          @_roughness = value
+          @_roughness = parseFloat value
           @_update()
 
       initialDisplacement:
         get: -> @_initialDisplacement
         set: (value) ->
-          @_initialDisplacement = value
+          @_initialDisplacement = parseFloat value
+          @_update()
+
+      leftHeight:
+        get: -> @_leftHeight
+        set: (value) ->
+          @_leftHeight = parseFloat value
+          @_update()
+
+      rightHeight:
+        get: -> @_rightHeight
+        set: (value) ->
+          @_rightHeight = parseFloat value
           @_update()
 
       cameraZ:
         get: -> @_camera.position.z
         set: (value) ->
-          @_camera.position.z = value
+          @_camera.position.z = parseFloat value
           @_update()
 

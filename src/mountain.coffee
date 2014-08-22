@@ -45,8 +45,9 @@ angular.module('mountain-scene').factory 'Mountain', (random) ->
 
   class Mountain
 
-    constructor: (roughness, initialDisplacement) ->
-      segment = { l: 1, r: 1}
+    constructor: (params) ->
+      {roughness, initialDisplacement, leftHeight, rightHeight} = params
+      segment = { l: leftHeight or 1, r: rightHeight or 1 }
       tree    = buildTree(roughness) segment, 11, initialDisplacement
       heights = flattenTree tree
       shape = new THREE.Shape()
