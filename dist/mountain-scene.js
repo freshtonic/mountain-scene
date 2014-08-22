@@ -121,6 +121,7 @@
     var MountainScene;
     return MountainScene = (function() {
       function MountainScene() {
+        this._seed = 1;
         this._scene = new THREE.Scene();
         this._camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.renderer = new THREE.WebGLRenderer();
@@ -140,7 +141,8 @@
       }
 
       MountainScene.prototype.regenerate = function() {
-        return this._update(Math.random() * 100000);
+        this._seed = Math.random() * 100000;
+        return this._update();
       };
 
       MountainScene.prototype.render = function() {
@@ -152,9 +154,9 @@
         })(this));
       };
 
-      MountainScene.prototype._update = function(seed) {
+      MountainScene.prototype._update = function() {
         this._scene.remove(this._mountain.object);
-        random.reset(seed);
+        random.reset(this._seed);
         this._mountain = new Mountain({
           roughness: this.roughness,
           initialDisplacement: this.initialDisplacement,

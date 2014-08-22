@@ -5,6 +5,7 @@ angular.module('mountain-scene').factory 'MountainScene', (Mountain, random) ->
 
   class MountainScene
     constructor: ->
+      @_seed     = 1
       @_scene    = new THREE.Scene()
       @_camera   = new THREE.PerspectiveCamera 90, window.innerWidth / window.innerHeight, 0.1, 1000
       @renderer  = new THREE.WebGLRenderer()
@@ -23,15 +24,16 @@ angular.module('mountain-scene').factory 'MountainScene', (Mountain, random) ->
       @_scene.add @_mountain.object
 
     regenerate: ->
-      @_update Math.random() * 100000
+      @_seed = Math.random() * 100000
+      @_update()
 
     render: ->
       @renderer.render @_scene, @_camera
       requestAnimationFrame => @render()
 
-    _update: (seed) ->
+    _update: ->
       @_scene.remove @_mountain.object
-      random.reset seed
+      random.reset @_seed
       @_mountain = new Mountain {@roughness, @initialDisplacement, @leftHeight, @rightHeight}
       @_scene.add @_mountain.object
 
