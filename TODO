@@ -1,2 +1,10 @@
 
-- mountain generator
+- make it interactive
+  - ui widget for controlling camera z
+    - console.logs values for pasting back into program
+
+- use repeatable random number generator
+  - sliders for roughness & initial displacement
+
+
+
