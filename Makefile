@@ -12,7 +12,7 @@ build/%.js: src/%.coffee
 # TARGETS
 
 build/concat-order.txt: $(SRC_COFFEE)
-	@./dep-order > $@
+	@./solve-deps > $@
 
 build/mountain-scene.coffee: build/concat-order.txt
 	@cat $(shell cat $^) > $@
