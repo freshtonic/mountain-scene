@@ -45,10 +45,10 @@ angular.module('mountain-scene').factory 'Mountain', (random) ->
 
   class Mountain
 
-    constructor: (params) ->
-      {roughness, initialDisplacement, leftHeight, rightHeight} = params
+    constructor: ({roughness, initialDisplacement, leftHeight, rightHeight, zPos, color} = params) ->
       segment = { l: leftHeight or 1, r: rightHeight or 1 }
-      tree    = buildTree(roughness) segment, 11, initialDisplacement
+      color= 0xBBBBBB if not color?
+      tree    = buildTree(roughness) segment, 10, initialDisplacement
       heights = flattenTree tree
       shape = new THREE.Shape()
 
@@ -65,8 +65,9 @@ angular.module('mountain-scene').factory 'Mountain', (random) ->
       shape.lineTo -(heights.length / 2), 0
 
       geometry = new THREE.ShapeGeometry shape
-      material = new THREE.MeshBasicMaterial color: 0xBBBBBB
+      material = new THREE.MeshBasicMaterial color: color
 
       @object = new THREE.Mesh(geometry, material)
+      @object.position.z = zPos or 0
 
 

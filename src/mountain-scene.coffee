@@ -14,14 +14,15 @@ angular.module('mountain-scene').factory 'MountainScene', (Mountain, random) ->
 
       @_camera.position.z = 250
 
-      @_roughness = 0.65
+      @_roughness           = 0.65
       @_initialDisplacement = 65
-      @_leftHeight = 2
-      @_rightHeight = 2
+      @_leftHeight          = 2
+      @_rightHeight         = 2
 
-      @_mountain = new Mountain {@roughness, @initialDisplacement, @leftHeight, @rightHeight}
+      @_makeMountains()
 
-      @_scene.add @_mountain.object
+      for mountain in @_mountains
+        @_scene.add mountain.object
 
     regenerate: ->
       @_seed = Math.random() * 100000
@@ -31,11 +32,22 @@ angular.module('mountain-scene').factory 'MountainScene', (Mountain, random) ->
       @renderer.render @_scene, @_camera
       requestAnimationFrame => @render()
 
+    _makeMountains: ->
+      @_mountains = []
+      zPos = 0
+      color = 0x444444
+      for n in [0...4]
+        @_mountains.push new Mountain {@roughness, @initialDisplacement, @leftHeight, @rightHeight, zPos, color}
+        zPos += 20
+        color *= 0.08
+
     _update: ->
-      @_scene.remove @_mountain.object
+      for mountain in @_mountains
+        @_scene.remove mountain.object
       random.reset @_seed
-      @_mountain = new Mountain {@roughness, @initialDisplacement, @leftHeight, @rightHeight}
-      @_scene.add @_mountain.object
+      @_makeMountains()
+      for mountain in @_mountains
+        @_scene.add mountain.object
 
     Object.defineProperties @::,
 
