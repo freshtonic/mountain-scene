@@ -33,6 +33,12 @@ angular.module('mountain-scene').factory 'Mountain', (random) ->
 
     heights
 
+  lowest = (heights) ->
+    heights.reduce (l, h) ->
+      l = h if h < l
+      l
+    , 0
+
   class Mountain
 
     constructor: (roughness, initialDisplacement) ->
@@ -41,20 +47,21 @@ angular.module('mountain-scene').factory 'Mountain', (random) ->
       heights = flattenTree tree
       shape = new THREE.Shape()
 
-      x = -512
-      shape.moveTo x, heights[0]
+      l = lowest(heights) - 10
+
+      x = -(heights.length / 2)
+      shape.moveTo x, l
+      shape.lineTo x, heights[0]
       for h in heights[1..]
         x += 1
         shape.lineTo x, h
 
-      shape.lineTo x, -20
-      shape.lineTo -512, -20
-      shape.lineTo 512, heights[0]
+      shape.lineTo x, l
+      shape.lineTo -(heights.length / 2), l
 
       geometry = new THREE.ShapeGeometry shape
       material = new THREE.MeshBasicMaterial color: 0x00ffff
 
       @object = new THREE.Mesh(geometry, material)
-      @object.position.x = -30
 
 

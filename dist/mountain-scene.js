@@ -29,7 +29,7 @@
   });
 
   angular.module('mountain-scene').factory('Mountain', function(random) {
-    var Mountain, buildTree, flattenTree;
+    var Mountain, buildTree, flattenTree, lowest;
     buildTree = function(roughness) {
       var build;
       return build = function(segment, depth, displacement) {
@@ -67,9 +67,17 @@
       }
       return heights;
     };
+    lowest = function(heights) {
+      return heights.reduce(function(l, h) {
+        if (h < l) {
+          l = h;
+        }
+        return l;
+      }, 0);
+    };
     return Mountain = (function() {
       function Mountain(roughness, initialDisplacement) {
-        var geometry, h, heights, material, segment, shape, tree, x, _i, _len, _ref;
+        var geometry, h, heights, l, material, segment, shape, tree, x, _i, _len, _ref;
         segment = {
           l: 1,
           r: 1
@@ -77,23 +85,23 @@
         tree = buildTree(roughness)(segment, 11, initialDisplacement);
         heights = flattenTree(tree);
         shape = new THREE.Shape();
-        x = -512;
-        shape.moveTo(x, heights[0]);
+        l = lowest(heights) - 10;
+        x = -(heights.length / 2);
+        shape.moveTo(x, l);
+        shape.lineTo(x, heights[0]);
         _ref = heights.slice(1);
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           h = _ref[_i];
           x += 1;
           shape.lineTo(x, h);
         }
-        shape.lineTo(x, -20);
-        shape.lineTo(-512, -20);
-        shape.lineTo(512, heights[0]);
+        shape.lineTo(x, l);
+        shape.lineTo(-(heights.length / 2), l);
         geometry = new THREE.ShapeGeometry(shape);
         material = new THREE.MeshBasicMaterial({
           color: 0x00ffff
         });
         this.object = new THREE.Mesh(geometry, material);
-        this.object.position.x = -30;
       }
 
       return Mountain;
