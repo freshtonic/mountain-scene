@@ -1,5 +1,5 @@
 
-# depends: app.module
+# depends: mountain-scene.module
 
 # Generates a random number. However, we can resetthe seed so we can get
 # repeatable random sequences. This is useful when tweaking generated mountains

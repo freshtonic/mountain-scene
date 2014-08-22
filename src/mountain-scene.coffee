@@ -1,5 +1,5 @@
 
-# depends: app.module
+# depends: mountain-scene.module
 
 angular.module('mountain-scene').factory 'MountainScene', (Mountain, random) ->
 
