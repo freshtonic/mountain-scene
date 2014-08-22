@@ -10,13 +10,16 @@
 	<body ng-app='mountain-scene'>
     <ul class='controls'>
       <li>
-        <input ng-model='scene.roughness' type='range' min='0.0' max='1.0' step='0.1'> Roughness
+        <input ng-model='scene.roughness' type='range' min='0.0' max='1.0' step='0.01'> Roughness
       </li>
       <li>
-        <input ng-model='scene.initialDisplacement' type='range' min='0' max='100' step='5'> Initial displacement
+        <input ng-model='scene.initialDisplacement' type='range' min='0' max='100' step='1'> Initial displacement
       </li>
       <li>
-        <input ng-model='scene.cameraZ' type='range' min='0' max='100' step='1'> Camera z coordinate
+        <input ng-model='scene.cameraZ' type='range' min='0' max='1000' step='1'> Camera z coordinate
+      </li>
+      <li>
+        <button ng-click='scene.regenerate()'>Regenerate</button>
       </li>
     </ul>
 	</body>

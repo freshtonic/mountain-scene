@@ -33,26 +33,23 @@ angular.module('mountain-scene').factory 'Mountain', (random) ->
 
     heights
 
-  scaleHeight = (h) ->
-    h / 100
-
   class Mountain
 
     constructor: (roughness, initialDisplacement) ->
-      segment = { l: 50, r: 50}
+      segment = { l: 1, r: 1}
       tree    = buildTree(roughness) segment, 11, initialDisplacement
       heights = flattenTree tree
       shape = new THREE.Shape()
 
-      x = 0
-      shape.moveTo x, scaleHeight heights[0]
+      x = -512
+      shape.moveTo x, heights[0]
       for h in heights[1..]
-        x += 0.5
-        shape.lineTo x, scaleHeight h
+        x += 1
+        shape.lineTo x, h
 
-      shape.lineTo x, scaleHeight -20
-      shape.lineTo 0, scaleHeight -20
-      shape.lineTo 0, scaleHeight heights[0]
+      shape.lineTo x, -20
+      shape.lineTo -512, -20
+      shape.lineTo 512, heights[0]
 
       geometry = new THREE.ShapeGeometry shape
       material = new THREE.MeshBasicMaterial color: 0x00ffff

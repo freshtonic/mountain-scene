@@ -9,7 +9,8 @@ angular.module('mountain-scene').service 'random', ->
 
   seed = 1
 
-  reset: -> seed = 1
+  reset: (randomSeed=1) ->
+    seed = randomSeed
 
   next: ->
     x = Math.sin(seed++) * 10000

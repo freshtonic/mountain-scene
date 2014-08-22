@@ -20,13 +20,16 @@ angular.module('mountain-scene').factory 'MountainScene', (Mountain, random) ->
 
       @_scene.add @_mountain.object
 
+    regenerate: ->
+      @_update Math.random() * 100000
+
     render: ->
       @renderer.render @_scene, @_camera
       requestAnimationFrame => @render()
 
-    _update: ->
+    _update: (seed) ->
       @_scene.remove @_mountain.object
-      random.reset()
+      random.reset seed
       @_mountain = new Mountain @_roughness, @_initialDisplacement
       @_scene.add @_mountain.object
 

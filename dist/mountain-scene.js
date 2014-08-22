@@ -14,8 +14,11 @@
     var seed;
     seed = 1;
     return {
-      reset: function() {
-        return seed = 1;
+      reset: function(randomSeed) {
+        if (randomSeed == null) {
+          randomSeed = 1;
+        }
+        return seed = randomSeed;
       },
       next: function() {
         var x;
@@ -26,7 +29,7 @@
   });
 
   angular.module('mountain-scene').factory('Mountain', function(random) {
-    var Mountain, buildTree, flattenTree, scaleHeight;
+    var Mountain, buildTree, flattenTree;
     buildTree = function(roughness) {
       var build;
       return build = function(segment, depth, displacement) {
@@ -64,30 +67,27 @@
       }
       return heights;
     };
-    scaleHeight = function(h) {
-      return h / 100;
-    };
     return Mountain = (function() {
       function Mountain(roughness, initialDisplacement) {
         var geometry, h, heights, material, segment, shape, tree, x, _i, _len, _ref;
         segment = {
-          l: 50,
-          r: 50
+          l: 1,
+          r: 1
         };
         tree = buildTree(roughness)(segment, 11, initialDisplacement);
         heights = flattenTree(tree);
         shape = new THREE.Shape();
-        x = 0;
-        shape.moveTo(x, scaleHeight(heights[0]));
+        x = -512;
+        shape.moveTo(x, heights[0]);
         _ref = heights.slice(1);
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           h = _ref[_i];
-          x += 0.5;
-          shape.lineTo(x, scaleHeight(h));
+          x += 1;
+          shape.lineTo(x, h);
         }
-        shape.lineTo(x, scaleHeight(-20));
-        shape.lineTo(0, scaleHeight(-20));
-        shape.lineTo(0, scaleHeight(heights[0]));
+        shape.lineTo(x, -20);
+        shape.lineTo(-512, -20);
+        shape.lineTo(512, heights[0]);
         geometry = new THREE.ShapeGeometry(shape);
         material = new THREE.MeshBasicMaterial({
           color: 0x00ffff
@@ -116,6 +116,10 @@
         this._scene.add(this._mountain.object);
       }
 
+      MountainScene.prototype.regenerate = function() {
+        return this._update(Math.random() * 100000);
+      };
+
       MountainScene.prototype.render = function() {
         this.renderer.render(this._scene, this._camera);
         return requestAnimationFrame((function(_this) {
@@ -125,9 +129,9 @@
         })(this));
       };
 
-      MountainScene.prototype._update = function() {
+      MountainScene.prototype._update = function(seed) {
         this._scene.remove(this._mountain.object);
-        random.reset();
+        random.reset(seed);
         this._mountain = new Mountain(this._roughness, this._initialDisplacement);
         return this._scene.add(this._mountain.object);
       };
