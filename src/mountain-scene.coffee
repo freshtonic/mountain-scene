@@ -14,10 +14,12 @@ angular.module('mountain-scene').factory 'MountainScene', (Mountain, random) ->
 
       @_camera.position.z = 250
 
-      @_roughness           = 0.65
-      @_initialDisplacement = 65
-      @_leftHeight          = 2
-      @_rightHeight         = 2
+      @_roughness                       = 0.65
+      @_initialDisplacement             = 65
+      @_roughnessChangeFactor           = 0.98
+      @_initialDisplacementChangeFactor = 0.95
+      @_leftHeight                      = 2
+      @_rightHeight                     = 2
 
       @_makeMountains()
 
@@ -36,8 +38,13 @@ angular.module('mountain-scene').factory 'MountainScene', (Mountain, random) ->
       @_mountains = []
       zPos = 0
       color = 0x444444
+      [roughness, initialDisplacement, leftHeight, rightHeight] =
+        [@roughness, @initialDisplacement, @leftHeight, @rightHeight]
       for n in [0...4]
-        @_mountains.push new Mountain {@roughness, @initialDisplacement, @leftHeight, @rightHeight, zPos, color}
+        random.reset @_seed
+        @_mountains.push new Mountain {roughness, initialDisplacement, leftHeight, rightHeight, zPos, color}
+        roughness *=  @_roughnessChangeFactor
+        initialDisplacement *= @_initialDisplacementChangeFactor
         zPos += 20
         color *= 0.08
 
@@ -57,10 +64,22 @@ angular.module('mountain-scene').factory 'MountainScene', (Mountain, random) ->
           @_roughness = parseFloat value
           @_update()
 
+      roughnessChangeFactor:
+        get: -> @_roughnessChangeFactor
+        set: (value) ->
+          @_roughnessChangeFactor = parseFloat value
+          @_update()
+
       initialDisplacement:
         get: -> @_initialDisplacement
         set: (value) ->
           @_initialDisplacement = parseFloat value
+          @_update()
+
+      initialDisplacementChangeFactor:
+        get: -> @_initialDisplacementChangeFactor
+        set: (value) ->
+          @_initialDisplacementChangeFactor = parseFloat value
           @_update()
 
       leftHeight:

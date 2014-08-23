@@ -34,6 +34,16 @@
         Right height {{ scene.rightHeight }}
       </li>
     </ul>
+    <ul class='controls' ng-show='activeTab=="Mountains"'>
+      <li>
+        <input ng-model='scene.roughnessChangeFactor' type='range' min='0.0' max='1.0' step='0.01'>
+        Roughness change factor {{ scene.roughnessChangeFactor }}
+      </li>
+      <li>
+        <input ng-model='scene.initialDisplacementChangeFactor' type='range' min='0.0' max='1.0' step='0.01'>
+        Initial displacement change factor {{ scene.initialDisplacementChangeFactor }} 
+      </li>
+    </ul>
     <ul class='controls' ng-show='activeTab=="Camera"'>
       <li>
         <input ng-model='scene.cameraX' type='range' min='0' max='1000' step='1'>
@@ -48,7 +58,7 @@
         Camera Z coordinate {{ scene.cameraZ }}
       </li>
     </ul>
-    <div>
+    <div class='buttons'>
       <button ng-click='scene.regenerate()'>Regenerate</button>
     </div>
 	</body>
